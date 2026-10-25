@@ -17,5 +17,5 @@ RUN apt-get update \
 RUN python3 -m venv /opt/worker \
  && /opt/worker/bin/pip install --no-cache-dir runpod==1.12.0
 
-COPY handler.py /opt/worker/handler.py
+COPY worker.py handler.py /opt/worker/
 CMD ["/opt/worker/bin/python", "-u", "/opt/worker/handler.py"]

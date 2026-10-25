@@ -33,7 +33,8 @@ Output, read from `/stream/<job id>` (every item is below RunPod's 1 MB chunk li
 
 ## Endpoint settings
 
-- Build from this repository (RunPod's GitHub integration), Dockerfile at the root.
+- Build from this repository (RunPod's GitHub integration), Dockerfile at the root. A push does not
+  update the endpoint: **a new GitHub release does** (RunPod then rebuilds the image).
 - GPUs: the 16 GB and 24 GB classes (Ampere sm_86 and Ada sm_89; code built for sm_86 runs on both).
 - **Minimum CUDA version 13.0** (`minCudaVersion`). Do not use the "allowed CUDA versions" list: it
   matches exactly and hides hosts with newer drivers.
@@ -45,9 +46,14 @@ Output, read from `/stream/<job id>` (every item is below RunPod's 1 MB chunk li
 Anyone holding an API key for the endpoint can run arbitrary code on its workers: the key is the
 boundary. Use a key restricted to this endpoint where RunPod allows it, keep it in CI secrets only.
 
+## Layout
+
+`worker.py` is the job logic; `handler.py` only hands jobs to it and starts the RunPod worker
+(RunPod's GitHub integration requires `runpod.serverless.start()` at the top level of `handler.py`).
+
 ## Tests
 
-`python3 -m unittest test_handler` (Python ≥ 3.12, no RunPod SDK needed).
+`python3 -m unittest test_worker` (Python ≥ 3.12, no RunPod SDK needed).
 
 ## License
 

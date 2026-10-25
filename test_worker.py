@@ -1,4 +1,4 @@
-"""Tests of handler.run_job (no RunPod SDK needed): real bash, real tar archives, in a temporary directory."""
+"""Tests of worker.run_job (no RunPod SDK needed): real bash, real tar archives, in a temporary directory."""
 import base64
 import hashlib
 import io
@@ -8,7 +8,7 @@ import tarfile
 import tempfile
 import unittest
 
-import handler
+import worker
 
 
 def tar_b64(files):
@@ -27,7 +27,7 @@ class RunJob(unittest.TestCase):
         self.addCleanup(self.root.cleanup)
 
     def run_job(self, job_input):
-        items = list(handler.run_job(job_input, self.root.name))
+        items = list(worker.run_job(job_input, self.root.name))
         for item in items:
             self.assertLess(len(json.dumps(item)), 1_000_000)
         self.assertEqual(items[-1]["type"], "end")
